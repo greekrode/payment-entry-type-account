@@ -69,7 +69,8 @@ frappe.ui.form.on('Expense Entry', {
 		frm.set_query("expense_account", 'expenses', () => {
 			return {
 				filters: [
-					["Account", "root_type", "Like", "%Expenses%"]
+					["Account", "account_type", "in", ["Expense Account", "Tax"]],
+                			["Account", "is_group", "=", "0"]
 				]
 			}
 		});
