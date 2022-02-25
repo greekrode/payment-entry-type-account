@@ -55,7 +55,7 @@
   }
  ],
  "custom_perms": [],
- "doctype": "Expense Entry",
+ "doctype": "Payment on Account",
  "property_setters": [
   {
    "_assign": null,
@@ -64,21 +64,21 @@
    "_user_tags": null,
    "creation": "2020-10-25 20:34:18.950614",
    "default_value": null,
-   "doc_type": "Expense Entry",
+   "doc_type": "Payment on Account",
    "docstatus": 0,
    "doctype_or_field": "DocType",
    "field_name": null,
    "idx": 0,
    "modified": "2020-10-25 20:34:18.950614",
    "modified_by": "adam.daveed@gmail.com",
-   "name": "Expense Entry-default_print_format",
+   "name": "Payment on Account-default_print_format",
    "owner": "adam.daveed@gmail.com",
    "parent": null,
    "parentfield": null,
    "parenttype": null,
    "property": "default_print_format",
    "property_type": "Data",
-   "value": "Expense Entry"
+   "value": "Payment on Account"
   }
  ],
  "sync_on_migrate": 1
