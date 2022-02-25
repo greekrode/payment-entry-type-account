@@ -1,7 +1,7 @@
 {
  "allow_events_in_timeline": 1,
  "allow_import": 1,
- "autoname": "EXP-.YYYY.-.#####",
+ "autoname": "POA-.YYYY.-.#####",
  "creation": "2020-10-20 19:17:16.499838",
  "doctype": "DocType",
  "document_type": "Document",
@@ -44,14 +44,14 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Posting Date",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "allow_in_quick_entry": 1,
    "fieldname": "required_by",
    "fieldtype": "Datetime",
    "label": "Required By",
-   "reqd": 1
+   "reqd": 0
   },
   {
    "allow_in_quick_entry": 1,
@@ -98,7 +98,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Expense Entry",
+   "options": "Payment on Account",
    "print_hide": 1,
    "read_only": 1
   },
@@ -117,7 +117,7 @@
    "fieldname": "expenses",
    "fieldtype": "Table",
    "label": "Expense Details",
-   "options": "Expense Entry Item",
+   "options": "Payment on Account Item",
    "reqd": 1
   },
   {
@@ -195,7 +195,7 @@
  "modified": "2020-10-30 12:14:26.377515",
  "modified_by": "adam.daveed@gmail.com",
  "module": "Expense Request",
- "name": "Expense Entry",
+ "name": "Payment on Account",
  "owner": "Administrator",
  "permissions": [
   {
