@@ -170,8 +170,6 @@ def make_journal_entry(expense_entry):
             'doctype': 'Journal Entry',
             'voucher_type': 'Journal Entry',
             'posting_date': expense_entry.posting_date,
-            'document_type': 'Expense Entry',
-            'document_no': expense_entry.name,
             'company': expense_entry.company,
             'accounts': accounts,
             'user_remark': expense_entry.remarks,
