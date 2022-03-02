@@ -171,7 +171,7 @@ def make_journal_entry(expense_entry):
             'voucher_type': 'Journal Entry',
             'posting_date': expense_entry.posting_date,
             'expense_link': expense_entry.name,
-            'expense_link': expense_entry.naming_series,
+            'expense_label': expense_entry.name,
             'company': expense_entry.company,
             'accounts': accounts,
             'user_remark': expense_entry.remarks,
