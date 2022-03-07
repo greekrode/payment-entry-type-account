@@ -9,7 +9,6 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
-  "journal_doc",
   "column_break_1",
   "posting_date",
   "required_by",
