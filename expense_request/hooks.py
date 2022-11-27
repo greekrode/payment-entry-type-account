@@ -81,7 +81,10 @@ app_license = "MIT"
 
 doc_events = {
 	"Payment Entry Type Account": {
-		"on_update": "expense_request.api.setup"
+		"on_update": "expense_request.api.submit"
+	},
+	"Payment Entry Type Account": {
+		"on_cancel": "expense_request.api.cancel"
 	}
 }
 
