@@ -12,12 +12,7 @@ from erpnext.accounts.general_ledger import (
     make_gl_entries
 )
 
-
-def cancel(docs, method):
-    submit(docs, "cancel")
-
-
-def submit(payment_entry_type_account, method):
+def setup(payment_entry_type_account, method):
     # add expenses up and set the total field
     # add default project and cost center to expense items
 
@@ -45,8 +40,11 @@ def submit(payment_entry_type_account, method):
     if payment_entry_type_account.status == "Approved":
         gl_entries = build_gl_map(payment_entry_type_account)
         gl_entries = process_gl_map(gl_entries, merge_entries=False)
-        cancel = True if method == "cancel" else False
-        payment_entry_type_account.ignore_linked_doctypes = ["GL Entry"]
+        cancel = False
+
+        if method == "on_cancel":
+            cancel = True
+            payment_entry_type_account.ignore_linked_doctypes = ["GL Entry"]
 
         make_gl_entries(gl_entries, cancel=cancel, adv_adj=False,
                         merge_entries=False, update_outstanding="No")

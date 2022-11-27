@@ -39,7 +39,7 @@ app_license = "MIT"
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# "Role": "home_page"
 # }
 
 # Website user home page (by function)
@@ -80,12 +80,10 @@ app_license = "MIT"
 # Hook on document methods and events
 
 doc_events = {
-	"Payment Entry Type Account": {
-		"on_update": "expense_request.api.submit"
-	},
-	"Payment Entry Type Account": {
-		"on_cancel": "expense_request.api.cancel"
-	}
+    "Payment Entry Type Account": {
+        "on_update": "expense_request.api.setup",
+        "on_cancel": "expense_request.api.setup",
+    },
 }
 
 # Scheduled Tasks
@@ -130,50 +128,50 @@ doc_events = {
 
 
 fixtures = ["Workflow", "Workflow State", "Workflow Action Master",
-	{
-		"dt": "Print Format",
-		"filters": [
-			[
-				"name", "in", [
-					"Payment Entry Type Account"
-				]
-			]
-		]
+            {
+                "dt": "Print Format",
+                "filters": [
+                        [
+                            "name", "in", [
+                                "Payment Entry Type Account"
+                            ]
+                        ]
+                ]
 
-	},
-	{
-		"dt": "Custom Field",
-		"filters": [
-			[
-				"name", "in", [
-					"Accounts Settings-expense_settings",
-					"Accounts Settings-default_mode_of_payment",
-					"Accounts Settings-column_break_16",
-					"Accounts Settings-notify_all_approvers",
-					"Accounts Settings-create_journals_entries_automatically"
-				]
-			]
-		]
-	},
-	{
-		"dt": "Notification",
-			"filters": [
-[
-                                        "name", "in", [
-                                                "Payment Entry Type Account",
-                                        ]
-                                ]
-			]
-	},
-	{
-		"dt": "Report",
-			"filters": [
-				[
-					"ref_doctype", "in", [
-						"Payment Entry Type Account",
-						"Journal Entry"
-					]
-				]
-			]
-	}
-]
+            },
+            {
+                "dt": "Custom Field",
+                "filters": [
+                    [
+                        "name", "in", [
+                                "Accounts Settings-expense_settings",
+                            "Accounts Settings-default_mode_of_payment",
+                            "Accounts Settings-column_break_16",
+                            "Accounts Settings-notify_all_approvers",
+                            "Accounts Settings-create_journals_entries_automatically"
+                        ]
+                    ]
+                ]
+            },
+            {
+                "dt": "Notification",
+                "filters": [
+                    [
+                        "name", "in", [
+                            "Payment Entry Type Account",
+                        ]
+                    ]
+                ]
+            },
+            {
+                "dt": "Report",
+                "filters": [
+                    [
+                        "ref_doctype", "in", [
+                            "Payment Entry Type Account",
+                            "Journal Entry"
+                        ]
+                    ]
+                ]
+            }
+            ]
