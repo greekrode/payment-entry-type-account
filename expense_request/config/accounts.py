@@ -11,9 +11,9 @@ def get_data():
 			"items": [
 				{
 					"type": "doctype",
-					"name": "Expense Entry",
+					"name": "Payment Entry Type Account",
 					"description": _("Capture Expenses"),
-            		"link": "List/Expense Entry/Link"
+            		"link": "List/Payment Entry Type Account/Link"
 				}
 			]
 		},
@@ -24,8 +24,8 @@ def get_data():
 					"type": "report",
 					"is_query_report": True,
 					"name": "Expenses Register",
-					"doctype": "Expense Entry",
-            		"link": "List/Expense Entry/Report/Expenses Register"
+					"doctype": "Payment Entry Type Account",
+            		"link": "List/Payment Entry Type Account/Report/Expenses Register"
 					
 				}
 			]

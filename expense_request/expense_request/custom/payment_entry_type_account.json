@@ -16,7 +16,7 @@
    "depends_on": null,
    "description": null,
    "docstatus": 0,
-   "dt": "Expense Entry",
+   "dt": "Payment Entry Type Account",
    "fetch_from": null,
    "fetch_if_empty": 0,
    "fieldname": "workflow_state",
@@ -33,7 +33,7 @@
    "length": 0,
    "modified": "2020-10-21 22:00:40.061493",
    "modified_by": "Administrator",
-   "name": "Expense Entry-workflow_state",
+   "name": "Payment Entry Type Account-workflow_state",
    "no_copy": 1,
    "options": "Workflow State",
    "owner": "Administrator",
@@ -55,7 +55,7 @@
   }
  ],
  "custom_perms": [],
- "doctype": "Expense Entry",
+ "doctype": "Payment Entry Type Account",
  "property_setters": [
   {
    "_assign": null,
@@ -64,21 +64,21 @@
    "_user_tags": null,
    "creation": "2020-10-25 20:34:18.950614",
    "default_value": null,
-   "doc_type": "Expense Entry",
+   "doc_type": "Payment Entry Type Account",
    "docstatus": 0,
    "doctype_or_field": "DocType",
    "field_name": null,
    "idx": 0,
    "modified": "2020-10-25 20:34:18.950614",
    "modified_by": "adam.daveed@gmail.com",
-   "name": "Expense Entry-default_print_format",
+   "name": "Payment Entry Type Account-default_print_format",
    "owner": "adam.daveed@gmail.com",
    "parent": null,
    "parentfield": null,
    "parenttype": null,
    "property": "default_print_format",
    "property_type": "Data",
-   "value": "Expense Entry"
+   "value": "Payment Entry Type Account"
   }
  ],
  "sync_on_migrate": 1

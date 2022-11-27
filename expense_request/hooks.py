@@ -80,7 +80,7 @@ app_license = "MIT"
 # Hook on document methods and events
 
 doc_events = {
-	"Expense Entry": {
+	"Payment Entry Type Account": {
 		"on_update": "expense_request.api.setup"
 	}
 }
@@ -132,7 +132,7 @@ fixtures = ["Workflow", "Workflow State", "Workflow Action Master",
 		"filters": [
 			[
 				"name", "in", [
-					"Expense Entry"
+					"Payment Entry Type Account"
 				]
 			]
 		]
@@ -157,7 +157,7 @@ fixtures = ["Workflow", "Workflow State", "Workflow Action Master",
 			"filters": [
 [
                                         "name", "in", [
-                                                "Expense Entry",
+                                                "Payment Entry Type Account",
                                         ]
                                 ]
 			]
@@ -167,7 +167,7 @@ fixtures = ["Workflow", "Workflow State", "Workflow Action Master",
 			"filters": [
 				[
 					"ref_doctype", "in", [
-						"Expense Entry",
+						"Payment Entry Type Account",
 						"Journal Entry"
 					]
 				]

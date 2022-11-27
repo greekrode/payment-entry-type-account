@@ -1,72 +1,19 @@
 import frappe
 from frappe import _
-from frappe import utils
-
-"""
-TODO
-
-Permissions 
-- Settings Checbox - Employee can create Expenses
-- Add Employee User Permission
-Report
-
-More Features - v2
-- Alert Approvers - manual - for pending / draft
-- Tax Templates
-- Separate Request Document
-   - Add approved amount on expense entry - auto filled from requested amount but changeable
-- Rename App. Expense Voucher vs Expense Entry
-- Tests
-
-- Fix
-    - Prevent Making JE's before submission / non-approvers
-
-- Add dependant fields
-    - Workflow entries
-    - JV type: Expense Entry
-    - JV Account Reference Type: Expense Entry
-    - Mode of Payment: Petty Cash
+from frappe.utils import (
+    formatdate
+)
+from erpnext.accounts.utils import get_account_currency, get_fiscal_years
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+    get_accounting_dimensions,
+)
+from erpnext.accounts.general_ledger import (
+    process_gl_map,
+    make_gl_entries
+)
 
 
-DONE
-  - Issues Fixed
-    - Wire Transfer requires reference date, and minor improvements
-    - Approver field vanishing
-  
-  - Print Format improvements - (Not done: Add signatures)
-  - Prevent duplicate entry - done
-  - Workflow: Pending Approval, Approved (set-approved by)
-  - Creation of JV
-  - expense refs
-  - Roles:
-    - Expense Approver
-  - Set authorising party
-
-  Add sections to EE and EE Items
-    Section: Accounting Dimensions
-    - Project
-    - Cost Center
-
-  - Add settings fields to Accounts Settings
-    Section: Expense Settings
-    - Link: Default Payment Account (Link: Mode of Payment) 
-      - Desc: Create a Mode of Payment for expenses and link it to your usual expenditure account like Petty Cash
-    - Checkbox: Notify all Approvers
-      - Desc: when a expense request is made
-    - Checkbox: Create Journals Automatically
-
-Add all the fixtures to the app so that it is fully portable
-a. Workflows
-b. Accounts Settings Fields
-c. Fix minor issues
-   - Cant set custom print format as default - without customisation
-
-Enhancements
-- Added Cost Center Filters
-"""
-
-
-def setup(expense_entry, method):
+def setup(payment_entry_type_account, method):
     # add expenses up and set the total field
     # add default project and cost center to expense items
 
@@ -74,120 +21,153 @@ def setup(expense_entry, method):
     count = 0
     expense_items = []
 
-    
-    for detail in expense_entry.expenses:
-        total += float(detail.amount)        
+    for detail in payment_entry_type_account.expenses:
+        total += float(detail.amount)
         count += 1
-        
-        if not detail.project and expense_entry.default_project:
-            detail.project = expense_entry.default_project
-        
-        if not detail.cost_center and expense_entry.default_cost_center:
-            detail.cost_center = expense_entry.default_cost_center
+
+        if not detail.project and payment_entry_type_account.default_project:
+            detail.project = payment_entry_type_account.default_project
+
+        if not detail.cost_center and payment_entry_type_account.default_cost_center:
+            detail.cost_center = payment_entry_type_account.default_cost_center
 
         expense_items.append(detail)
 
-    expense_entry.expenses = expense_items
+    payment_entry_type_account.expenses = expense_items
 
-    expense_entry.total = total
-    expense_entry.quantity = count
+    payment_entry_type_account.total = total
+    payment_entry_type_account.quantity = count
 
-    make_journal_entry(expense_entry)
-
-    
+    if payment_entry_type_account.status == "Approved":
+        gl_entries = build_gl_map(payment_entry_type_account)
+        gl_entries = process_gl_map(gl_entries, merge_entries=False)
+        make_gl_entries(gl_entries, cancel=0, adv_adj=False,
+                        merge_entries=False, update_outstanding="No")
 
 
 @frappe.whitelist()
-def initialise_journal_entry(expense_entry_name):
-    # make JE from javascript form Make JE button
+def build_gl_map(payment_entry_type_account, cancel=0):
+    # check for duplicates
 
-    make_journal_entry(
-        frappe.get_doc('Expense Entry', expense_entry_name)
+    if frappe.db.exists({'doctype': 'Journal Entry', 'bill_no': payment_entry_type_account.name}):
+        frappe.throw(
+            title="Error",
+            msg="Journal Entry {} already exists.".format(
+                payment_entry_type_account.name)
+        )
+
+    # Preparing the JE: convert payment_entry_type_account details into je account details
+
+    gl_entries = []
+
+    if payment_entry_type_account.payment_type == "Pay":
+        gl_entries.append(
+            get_gl_dict(
+                payment_entry_type_account,
+                {
+                    'account': payment_entry_type_account.payment_account,
+                    'account_currency': payment_entry_type_account.payment_account_currency,
+                    'credit_in_account_currency': float(payment_entry_type_account.total),
+                    'credit': float(payment_entry_type_account.total),
+                    'cost_center': payment_entry_type_account.default_cost_center,
+                    "post_net_value": True,
+                },
+                item=payment_entry_type_account,
+            )
+        )
+
+    if payment_entry_type_account.payment_type == "Receive":
+        gl_entries.append(
+            get_gl_dict(
+                payment_entry_type_account,
+                {
+                    'account': payment_entry_type_account.payment_account,
+                    'account_currency': payment_entry_type_account.payment_account_currency,
+                    'debit_in_account_currency': float(payment_entry_type_account.total),
+                    'debit': float(payment_entry_type_account.total),
+                    'cost_center': payment_entry_type_account.default_cost_center,
+                },
+                item=payment_entry_type_account,
+            )
+        )
+    for detail in payment_entry_type_account.expenses:
+        if payment_entry_type_account.payment_type == "Receive":
+            gl_entries.append(
+                get_gl_dict(
+                    payment_entry_type_account,
+                    {
+                        'account': detail.expense_account,
+                        'account_currency': payment_entry_type_account.payment_account_currency,
+                        'credit_in_account_currency': float(detail.amount),
+                        'credit': float(detail.amount),
+                        'cost_center': payment_entry_type_account.default_cost_center,
+                        "post_net_value": True,
+                    },
+                    item=payment_entry_type_account,
+                )
+            )
+
+        if payment_entry_type_account.payment_type == "Pay":
+            gl_entries.append(
+                get_gl_dict(
+                    payment_entry_type_account,
+                    {
+                        'account': detail.expense_account,
+                        'account_currency': payment_entry_type_account.payment_account_currency,
+                        'debit_in_account_currency': float(detail.amount),
+                        'debit': float(detail.amount),
+                        'cost_center': payment_entry_type_account.default_cost_center
+                    },
+                    item=payment_entry_type_account,
+                )
+            )
+    # finally add the payment account detail
+    return gl_entries
+
+
+def get_gl_dict(self, args, item=None):
+    """this method populates the common properties of a gl entry record"""
+
+    posting_date = args.get("posting_date") or self.get("posting_date")
+    fiscal_years = get_fiscal_years(posting_date, company=self.company)
+    if len(fiscal_years) > 1:
+        frappe.throw(
+            _("Multiple fiscal years exist for the date {0}. Please set company in Fiscal Year").format(
+                formatdate(posting_date)
+            )
+        )
+    else:
+        fiscal_year = fiscal_years[0][0]
+
+    gl_dict = frappe._dict(
+        {
+            "company": self.company,
+            "posting_date": posting_date,
+            "fiscal_year": fiscal_year,
+            "voucher_type": self.doctype,
+            "voucher_no": self.name,
+            "remarks": self.get("remarks") or self.get("remark"),
+            "debit": 0,
+            "credit": 0,
+            "debit_in_account_currency": 0,
+            "credit_in_account_currency": 0,
+            "is_opening": self.get("is_opening") or "No",
+            "party_type": None,
+            "party": None,
+            "project": self.get("project"),
+            "post_net_value": args.get("post_net_value"),
+        }
     )
 
+    accounting_dimensions = get_accounting_dimensions()
+    dimension_dict = frappe._dict()
 
-def make_journal_entry(expense_entry):
+    for dimension in accounting_dimensions:
+        dimension_dict[dimension] = self.get(dimension)
+        if item and item.get(dimension):
+            dimension_dict[dimension] = item.get(dimension)
 
-    if expense_entry.status == "Approved":         
+    gl_dict.update(dimension_dict)
+    gl_dict.update(args)
 
-        # check for duplicates
-        
-        if frappe.db.exists({'doctype': 'Journal Entry', 'bill_no': expense_entry.name}):
-            frappe.throw(
-                title="Error",
-                msg="Journal Entry {} already exists.".format(expense_entry.name)
-            )
-
-
-        # Preparing the JE: convert expense_entry details into je account details
-
-        accounts = []
-
-        for detail in expense_entry.expenses:            
-
-            accounts.append({  
-                'debit_in_account_currency': float(detail.amount),
-                'user_remark': str(detail.description),
-                'account': detail.expense_account,
-                'project': detail.project,
-                'cost_center': detail.cost_center
-            })
-
-        # finally add the payment account detail
-
-        pay_account = ""
-
-        if (expense_entry.mode_of_payment != "Cash" and (not 
-            expense_entry.payment_reference or not expense_entry.clearance_date)):
-            frappe.throw(
-                title="Enter Payment Reference",
-                msg="Payment Reference and Date are Required for all non-cash payments."
-            )
-        else:
-            expense_entry.clearance_date = ""
-            expense_entry.payment_reference = ""
-
-
-        payment_mode = frappe.get_doc('Mode of Payment', expense_entry.mode_of_payment)
-        for acc in payment_mode.accounts:
-            pay_account = acc.default_account
-
-        if not pay_account or pay_account == "":
-            frappe.throw(
-                title="Error",
-                msg="The selected Mode of Payment has no linked account."
-            )
-
-        accounts.append({  
-            'credit_in_account_currency': float(expense_entry.total),
-            'user_remark': str(detail.description),
-            'account': pay_account
-        })
-
-        # create the journal entry
-        je = frappe.get_doc({
-            'title': expense_entry.name,
-            'doctype': 'Journal Entry',
-            'voucher_type': 'Journal Entry',
-            'posting_date': expense_entry.posting_date,
-            'document_type': 'Expense Entry',
-            'document_no': expense_entry.name,
-            'company': expense_entry.company,
-            'accounts': accounts,
-            'user_remark': expense_entry.remarks,
-            'mode_of_payment': expense_entry.mode_of_payment,
-            'cheque_date': expense_entry.clearance_date,
-            'reference_date': expense_entry.clearance_date,
-            'cheque_no': expense_entry.payment_reference,
-            'pay_to_recd_from': expense_entry.payment_to,
-            'bill_no': expense_entry.name
-        })
-
-        user = frappe.get_doc("User", frappe.session.user)
-
-        full_name = str(user.first_name) + ' ' + str(user.last_name)
-        expense_entry.db_set('approved_by', full_name)
-        
-
-        je.insert()
-        je.submit()
+    return gl_dict

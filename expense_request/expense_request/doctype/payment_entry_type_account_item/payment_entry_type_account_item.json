@@ -47,7 +47,7 @@
    "label": "Accounting Dimensions"
   },
   {
-   "fetch_from": "expense_entry.default_cost_center",
+   "fetch_from": "payment_entry_type_account.default_cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -68,7 +68,7 @@
   {
    "fieldname": "expense_details_section",
    "fieldtype": "Section Break",
-   "label": "Expense Details"
+   "label": "Account Details"
   },
   {
    "fieldname": "column_break_4",
@@ -81,7 +81,7 @@
  "modified": "2020-11-26 13:59:41.581004",
  "modified_by": "Administrator",
  "module": "Expense Request",
- "name": "Expense Entry Item",
+ "name": "Payment Entry Type Account Item",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

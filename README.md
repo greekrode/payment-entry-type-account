@@ -1,9 +1,9 @@
-## Expense Entry (Renamed)
+## Payment Entry Type Account (Renamed)
 
-ERPNext Expense Entry allows easy capture of non-item expenses without using the Journal Entry,
+ERPNext Payment Entry Type Account allows easy capture of non-item expenses without using the Journal Entry,
 
 ## Doctype Setup
-#### Expense Entry Doctype
+#### Payment Entry Type Account Doctype
 ```
 Users
 - Accounts Users - can draft
@@ -67,7 +67,7 @@ Later
 - [ ] Alert Approvers
 - [ ] Tax Templates
 - [ ] Separate Request Document
-- [ ] Rename App. Expense Voucher vs Expense Entry
+- [ ] Rename App. Expense Voucher vs Payment Entry Type Account
 - [ ] Request addition into ERPNext Core
 - [ ] Wrtie tests
 

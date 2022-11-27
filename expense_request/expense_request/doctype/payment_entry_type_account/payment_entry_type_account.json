@@ -1,0 +1,271 @@
+{
+  "allow_events_in_timeline": 1,
+  "allow_import": 1,
+  "autoname": "EXP-.YYYY.-.#####",
+  "creation": "2020-10-20 19:17:16.499838",
+  "doctype": "DocType",
+  "document_type": "Document",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "company",
+    "payment_type",
+    "column_break_1",
+    "posting_date",
+    "required_by",
+    "payment_to",
+    "accounting_dimensions_section",
+    "default_project",
+    "accounting_col",
+    "default_cost_center",
+    "expense_details_section",
+    "expenses",
+    "section_break_8",
+    "quantity",
+    "column_break_20",
+    "total",
+    "additional_information_section",
+    "remarks",
+    "approved_by",
+    "column_break_8",
+    "mode_of_payment",
+    "payment_account",
+    "payment_account_currency",
+    "status",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "bold": 1,
+      "fieldname": "payment_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Payment Type",
+      "options": "Receive\nPay",
+      "print_hide": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Today",
+      "fieldname": "posting_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Posting Date",
+      "read_only": 0
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "fieldname": "required_by",
+      "fieldtype": "Datetime",
+      "label": "Required By",
+      "reqd": 0
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "fieldname": "expense_details_section",
+      "fieldtype": "Section Break",
+      "label": "Account Details"
+    },
+    {
+      "fieldname": "additional_information_section",
+      "fieldtype": "Section Break",
+      "label": "Additional Information"
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "in_preview": 1,
+      "label": "Remarks"
+    },
+    {
+      "fieldname": "column_break_8",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "total",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total",
+      "precision": "2",
+      "read_only": 1
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "fieldname": "mode_of_payment",
+      "fieldtype": "Link",
+      "in_preview": 1,
+      "label": "Mode of Payment",
+      "options": "Mode of Payment",
+      "remember_last_selected_value": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Payment Entry Type Account",
+      "print_hide": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "print_hide": 1,
+      "remember_last_selected_value": 1,
+      "report_hide": 1,
+      "reqd": 1
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "fieldname": "expenses",
+      "fieldtype": "Table",
+      "label": "Account Details",
+      "options": "Payment Entry Type Account Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "payment_account",
+      "fieldtype": "Link",
+      "in_global_search": 1,
+      "label": "Payment Account",
+      "options": "Account",
+      "print_hide": 1,
+      "reqd": 1
+    },
+    {
+      "depends_on": "payment_account",
+      "fieldname": "payment_account_currency",
+      "fieldtype": "Link",
+      "label": "Account Currency",
+      "options": "Currency",
+      "print_hide": 1,
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "hidden": 1,
+      "label": "Status",
+      "options": "Pending\nApproved\nRejected"
+    },
+    {
+      "allow_on_submit": 1,
+      "fieldname": "approved_by",
+      "fieldtype": "Read Only",
+      "label": "Approved By"
+    },
+    {
+      "fieldname": "payment_to",
+      "fieldtype": "Data",
+      "label": "Payment To"
+    },
+    {
+      "fieldname": "section_break_8",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "quantity",
+      "fieldtype": "Read Only",
+      "label": "Quantity",
+      "print_hide": 1
+    },
+    {
+      "fieldname": "accounting_dimensions_section",
+      "fieldtype": "Section Break",
+      "label": "Accounting Dimensions"
+    },
+    {
+      "allow_in_quick_entry": 1,
+      "description": "Applies to all expenses below unless specified differently",
+      "fieldname": "default_cost_center",
+      "fieldtype": "Link",
+      "label": "Default Cost Center",
+      "options": "Cost Center",
+      "remember_last_selected_value": 1
+    },
+    {
+      "description": "Only use when all expenses are project related",
+      "fieldname": "default_project",
+      "fieldtype": "Link",
+      "label": "Default Project",
+      "options": "Project"
+    },
+    {
+      "fieldname": "accounting_col",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "column_break_20",
+      "fieldtype": "Column Break"
+    }
+  ],
+  "is_submittable": 1,
+  "modified": "2020-10-30 12:14:26.377515",
+  "modified_by": "adam.daveed@gmail.com",
+  "module": "Expense Request",
+  "name": "Payment Entry Type Account",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Expense Approver",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accounts User",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "cancel": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Employee",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "quick_entry": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1
+}
